@@ -1,31 +1,33 @@
 // TODO: write your code here
-export function getBuffer() {
-  const data = '{"data":{"user":{"id":1,"name":"Hitman","level":10}}}';
-  return ((input) => {
-    const buffer = new ArrayBuffer(data.length * 2);
-    const bufferView = new Uint16Array(buffer);
-    for (let i = 0; i < input.length; i += 1) {
-      bufferView[i] = input.charCodeAt(i);
-    }
-    return buffer;
-  })(data);
-}
+import Character from './character';
 
-export class ArrayBufferConverter {
-  constructor() {
-    this.buffer = null;
-  }
-ё
-  load(buffer) {
-    this.buffer = buffer;
+export default class MathCharacter extends Character {
+  constructor(name) {
+    super(name);
+    this.distance = 1;
+    this.stoned = false;
+    this.attack = 10;
   }
 
-  toString() {
-    const bufferView = new Uint16Array(this.buffer);
-    let resultString = "";
-    for (let i = 0; i < bufferView.length; i += 1) {
-      resultString += String.fromCharCode(bufferView[i]);
+  getAttack() {
+    if (this.distance === 0) return;
+
+    this.attack -= (this.attack * (10 / 100) * (this.distance - 1));
+    if (this.stoned === true) {
+      this.attack = Math.round(this.attack - (Math.log2(this.distance) * 5));
     }
-    return resultString;
+    if (this.attack < 0) this.attack = 0;
+  }
+
+  setAttack(value) {
+    this.attack = value;
+  }
+
+  getStoned() {
+    return this.stoned;
+  }
+
+  setStoned(value) {
+    this.stoned = value;
   }
 }
